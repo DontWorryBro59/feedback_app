@@ -1,4 +1,6 @@
 from flask import render_template, request, session, redirect, url_for, flash
+from sqlalchemy.ext.horizontal_shard import set_shard_id
+
 from myapp import app, db, CONSULTANTS
 from myapp.models import Feedbacks
 
@@ -50,13 +52,24 @@ def admin():
             return render_template('admin_login.html')
 
 
-@app.route('/admin_panel/')
+@app.route('/admin_panel/', methods=['GET', 'POST'])
 def admin_panel():
     if 'admin' in session:
-        feedbacks = db.session.query(Feedbacks).all()
-        return render_template('admin_panel.html', feedbacks=feedbacks)
+        if request.method == 'GET':
+                feedbacks = db.session.query(Feedbacks).all()
+                return render_template('admin_panel.html', feedbacks=feedbacks)
     else:
         return redirect(url_for('admin'))
+
+
+@app.route('/admin_panel/delete/', methods=['POST'])
+def del_comment():
+    comment_id = request.form.get('but-del')
+    comment_to_del = db.session.query(Feedbacks).filter(Feedbacks.id == comment_id).one_or_none()
+    if comment_to_del:
+        db.session.delete(comment_to_del)
+        db.session.commit()
+    return redirect(url_for('admin_panel'))
 
 
 @app.route('/admin_logout/')
@@ -66,3 +79,4 @@ def admin_logout():
         return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
+

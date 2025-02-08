@@ -19,16 +19,20 @@
         </tr>
 
         {% for el in feedbacks %}
-            <tr>
-                <td>{{ el.id }}</td>
-                <td>{{ el.consult_name }}</td>
-                <td>{{ el.date_feed }}</td>
-                <td>{{ el.comment }}</td>
-                <td>{{ el.rating }}</td>
-                <td>{{ el.phone_number }}</td>
-                <td>{{ el.send }}</td>
-                <td></td>
-            </tr>
+        <tr>
+            <td>{{ el.id }}</td>
+            <td>{{ el.consult_name }}</td>
+            <td>{{ el.date_feed }}</td>
+            <td>{{ el.comment }}</td>
+            <td>{{ el.rating }}</td>
+            <td>{{ el.phone_number }}</td>
+            <td>{{ el.send }}</td>
+            <td>
+                <form action="/admin_panel/delete/" method="post">
+                    <button type="submit" name="but-del" value="{{ el.id }}">Удалить</button>
+                </form>
+            </td>
+        </tr>
         {% endfor %}
 
     </table>
