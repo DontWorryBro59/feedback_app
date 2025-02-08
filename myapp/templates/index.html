@@ -3,5 +3,50 @@
 {% block title %} Форма обратной связи {% endblock %}
 
 {% block content %}
-<h1> Страница находится в разработке </h1>
+
+<div class="container">
+    <div class="my-form">
+        <form action="/index/" method="post">
+
+            <p> Введите имя консультанта </p>
+            {% if consultants %}
+            <select class='my-select' name="consult_name">
+                {% for consultant in consultants %}
+                <option selected value="{{ consultant }}">{{ consultant }}</option>
+                {% endfor %}
+                {% else %}
+                <input size="45" type="text" name="consult_name" placeholder="Имя консультанта" required><br>
+                {% endif %}
+            </select>
+
+            <p> Введите дату визита </p>
+            <input class='my-select' type="date" name="date" placeholder="Дата визита" required><br>
+
+
+            <p> Ваш отзыв </p>
+            <div class="comments">
+                <textarea cols="45" rows="10" charswidth="23" name="comment" required></textarea>
+            </div>
+
+            <div class="radio-bat"><br>
+                <p> Оцените сервис по пятибальной шкале </p>
+                <input type="radio" name="rating" value="1"> 1
+                <input type="radio" name="rating" value="2"> 2
+                <input type="radio" name="rating" value="3"> 3
+                <input type="radio" name="rating" value="4"> 4
+                <input type="radio" name="rating" value="5" checked required> 5
+            </div>
+
+            <p> Ваш номер телефона для обратной связи </p>
+            <p> Мы не передаем номер телефона третьим лицам </p>
+            <p> номер телефона используется только для возможности связаться с вами </p>
+            <input class='my-select' type="tel" name="phone" required><br>
+
+            <input class="sub-bt" type="submit" value="Отправить отзыв" class="btn"><br>
+
+        </form>
+    </div>
+
+</div>
+
 {% endblock %}

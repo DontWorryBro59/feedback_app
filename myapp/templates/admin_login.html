@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %} Панель администратора {% endblock %}
+
+{% block content %}
+
+<div class="admin-page">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color:red">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <h1> Вход в систему </h1>
+    <form action="/admin_login/" method="post">
+        <input type="text" name="username" placeholder="Username"><br>
+        <input type="password" name="password" placeholder="Password"><br>
+        <input type="submit">
+    </form>
+</div>
+
+
+{% endblock %}

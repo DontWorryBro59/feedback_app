@@ -1,0 +1,57 @@
+.container .logo img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container .my-form {
+    font-size: 20px;
+    text-align: center;
+    font-family: "Arial Black";
+}
+
+.container .my-form input {
+    margin-bottom: 25px;
+}
+
+.container .my-form .my-select {
+    margin-bottom: 25px;
+    font-size: 20px;
+    text-align: center;
+    font-family: "Arial";
+}
+
+.container .my-form .comments{
+    resize: vertical;
+}
+
+.container .my-form .sub-bt{
+    font-size: 20px;
+    font-family: "Arial";
+    margin: 20px;
+    padding: 10px;
+}
+
+.thanks-page {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 20px;
+    text-align: center;
+    font-family: "Arial Black";
+}
+
+.admin-page {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 14px;
+    text-align: center;
+    font-family: "Arial";
+}
+
+.admin-page form input{
+    margin-bottom: 25px;
+    font-size: 20px;
+    font-family: Arial;
+}
