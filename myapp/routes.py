@@ -72,6 +72,16 @@ def del_comment():
     return redirect(url_for('admin_panel'))
 
 
+@app.route('/admin_panel/delete-worker/', method=['POST'])
+def del_worker():
+    pass
+
+
+@app.route('/admin_panel/add_worker/', method=['POST'])
+def add_worker():
+    pass
+
+
 @app.route('/admin_logout/')
 def admin_logout():
     if 'admin' in session:
