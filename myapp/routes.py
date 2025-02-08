@@ -1,5 +1,5 @@
 from flask import render_template, request, session, redirect, url_for, flash
-from sqlalchemy.ext.horizontal_shard import set_shard_id
+from datetime import date as dt
 
 from myapp import app, db, CONSULTANTS
 from myapp.models import Feedbacks, Workers
@@ -8,16 +8,22 @@ from myapp.models import Feedbacks, Workers
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index/', methods=['GET', 'POST'])
 def index():
+    date_today = dt.today()
     if request.method == 'GET':
         if 'number' in session:
             return render_template('thanks.html')
-        return render_template('index.html', consultants=CONSULTANTS)
+        return render_template('index.html', consultants=CONSULTANTS, date_today=date_today)
     else:
         consult_name = request.form.get('consult_name')
         date = request.form.get('date')
         comment = request.form.get('comment')
         rate = request.form.get('rate')
         phone_number = request.form.get('phone')
+
+        if not check_date(date):
+            flash('Вы ввели некорректную дату, год должен быть текущим, дата отзыва меньше или равна текущей', 'errors')
+            return render_template('index.html', consultants=CONSULTANTS, date_today=date_today)
+
         new_feed = Feedbacks(consult_name=consult_name, date_feed=date, comment=comment,
                              rate=rate, phone_number=phone_number)
         db.session.add(new_feed)
@@ -102,3 +108,13 @@ def admin_logout():
         return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
+
+
+def check_date(date):
+    date_today = list(map(int, str(dt.today()).split('-')))
+    date = list(map(int, date.split('-')))
+    print(date_today)
+    print(date)
+    if date_today[0] == date[0] and date_today[1] >= date[1] and date_today[2] >= date[2]:
+        return True
+    return False

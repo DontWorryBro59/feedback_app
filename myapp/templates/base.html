@@ -11,8 +11,20 @@
             <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="Logo"></a>
         </div>
     </div>
-    {% block content %}
 
+    <div class="container">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p class='p-flash'>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    </div>
+
+
+    {% block content %}
     {% endblock %}
+
 </body>
 </html>
