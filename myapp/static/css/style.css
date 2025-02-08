@@ -22,7 +22,7 @@
 }
 
 .container .my-form .comments{
-    resize: vertical;
+    resize: none;
 }
 
 .container .my-form .sub-bt{
@@ -54,4 +54,22 @@
     margin-bottom: 25px;
     font-size: 20px;
     font-family: Arial;
+}
+
+.admin-panel table{
+    font-size: 14px;
+    background: rgba(83,122,222,0.17);
+    border-spacing: 0px;
+}
+
+.admin-panel table th, td {
+    border: 1px solid grey;
+    width: auto;
+    border-spacing: 0px;
+    break-inside: avoid-column;
+    padding: 7px;
+}
+
+.admin-panel table .main-tr{
+    background: aquamarine;
 }

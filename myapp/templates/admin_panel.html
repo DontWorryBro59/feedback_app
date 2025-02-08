@@ -3,8 +3,35 @@
 {% block title %} Панель администратора {% endblock %}
 
 {% block content %}
-<div>
-    <h1> Тут будет панель для администратора с настройкой приложения </h1>
+<div class="admin-panel">
+    <h1> Панель администратора </h1>
+
+    <table>
+        <tr class="main-tr">
+            <th>id</th>
+            <th>Сотрудник</th>
+            <th>Дата отзыва</th>
+            <th>Отзыв</th>
+            <th>Оценка</th>
+            <th>Номер клиента</th>
+            <th>Отправлено(email)</th>
+            <th>Команды</th>
+        </tr>
+
+        {% for el in feedbacks %}
+            <tr>
+                <td>{{ el.id }}</td>
+                <td>{{ el.consult_name }}</td>
+                <td>{{ el.date_feed }}</td>
+                <td>{{ el.comment }}</td>
+                <td>{{ el.rating }}</td>
+                <td>{{ el.phone_number }}</td>
+                <td>{{ el.send }}</td>
+                <td></td>
+            </tr>
+        {% endfor %}
+
+    </table>
     <a href="{{ url_for('admin_logout') }}"><p>Выход из панели администратора</p></a>
 </div>
 {% endblock %}

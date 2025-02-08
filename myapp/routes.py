@@ -1,5 +1,6 @@
 from flask import render_template, request, session, redirect, url_for, flash
-from myapp import app, CONSULTANTS
+from myapp import app, db, CONSULTANTS
+from myapp.models import Feedbacks
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -14,8 +15,12 @@ def index():
         date = request.form.get('date')
         comment = request.form.get('comment')
         rating = request.form.get('rating')
-        phone_number = request.form.get('number')
+        phone_number = request.form.get('phone')
         print(consult_name, date, comment, rating, phone_number)
+        new_feed = Feedbacks(consult_name=consult_name, date_feed=date, comment=comment,
+                             rating=rating,phone_number=phone_number)
+        db.session.add(new_feed)
+        db.session.commit()
         session['number'] = phone_number
         return render_template('thanks.html')
 
@@ -44,12 +49,15 @@ def admin():
             flash('Ошибка ввода логина и пароля', 'errors')
             return render_template('admin_login.html')
 
+
 @app.route('/admin_panel/')
 def admin_panel():
     if 'admin' in session:
-        return render_template('admin_panel.html')
+        feedbacks = db.session.query(Feedbacks).all()
+        return render_template('admin_panel.html', feedbacks=feedbacks)
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for('admin'))
+
 
 @app.route('/admin_logout/')
 def admin_logout():
@@ -58,4 +66,3 @@ def admin_logout():
         return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
-
