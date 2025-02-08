@@ -16,11 +16,10 @@ def index():
         consult_name = request.form.get('consult_name')
         date = request.form.get('date')
         comment = request.form.get('comment')
-        rating = request.form.get('rating')
+        rate = request.form.get('rate')
         phone_number = request.form.get('phone')
-        print(consult_name, date, comment, rating, phone_number)
         new_feed = Feedbacks(consult_name=consult_name, date_feed=date, comment=comment,
-                             rating=rating, phone_number=phone_number)
+                             rate=rate, phone_number=phone_number)
         db.session.add(new_feed)
         db.session.commit()
         session['number'] = phone_number
@@ -75,12 +74,25 @@ def del_comment():
 
 @app.route('/admin_panel/delete-worker/', methods=['POST'])
 def del_worker():
-    pass
+    worker_id = request.form.get('but-del-worker')
+    worker_to_del = db.session.query(Workers).filter(Workers.id == worker_id).one_or_none()
+    if worker_to_del:
+        db.session.delete(worker_to_del)
+        db.session.commit()
+    CONSULTANTS.pop(CONSULTANTS.index(worker_to_del.full_name))
+    return redirect(url_for('admin_panel'))
 
 
 @app.route('/admin_panel/add_worker/', methods=['POST'])
 def add_worker():
-    pass
+    full_name = request.form.get('full_name')
+    worker_post = request.form.get('worker_post')
+    contacts = request.form.get('contacts')
+    new_worker = Workers(full_name=full_name, worker_post=worker_post, contacts=contacts)
+    db.session.add(new_worker)
+    db.session.commit()
+    CONSULTANTS.append(full_name)
+    return redirect(url_for('admin_panel'))
 
 
 @app.route('/admin_logout/')

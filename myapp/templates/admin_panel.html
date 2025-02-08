@@ -8,19 +8,21 @@
     <a href="{{ url_for('admin_logout') }}"><p>Выход из панели администратора</p></a>
 
     <h2>Добавить сотрудника</h2>
-    <!-- Тут нужно добавить форму для добавления сотрудников -->
+    <form action="/admin_panel/add_worker/" method="post">
+        <input type="text" placeholder="ФИО сотрудника" name="full_name">
+        <input type="text" placeholder="Должность" name="worker_post">
+        <input type="text" placeholder="Контакты" name="contacts">
+        <input type="submit" value="Добавить">
+    </form>
 
     <h2>Список сотрудников </h2>
     {% if workers %}
         <table>
             <tr class="main-tr">
                 <th>id</th>
-                <th>Сотрудник</th>
-                <th>Дата отзыва</th>
-                <th>Отзыв</th>
-                <th>Оценка</th>
-                <th>Номер клиента</th>
-                <th>Отправлено(email)</th>
+                <th>ФИО сотрудника</th>
+                <th>Должность</th>
+                <th>Контакты</th>
                 <th>Команды</th>
             </tr>
             {% for worker in workers %}
@@ -28,11 +30,10 @@
                 <td>{{ worker.id }}</td>
                 <td>{{ worker.full_name }}</td>
                 <td>{{ worker.worker_post }}</td>
-                <td>{{ worker.rating }}</td>
                 <td>{{ worker.contacts }}</td>
                 <td>
                     <form action="/admin_panel/delete-worker/" method="post">
-                        <button type="submit" name="but-del-worker" value="{{ el.id }}">Удалить</button>
+                        <button type="submit" name="but-del-worker" value="{{ worker.id }}">Удалить</button>
                     </form>
                 </td>
             </tr>
@@ -56,18 +57,18 @@
                 <th>Команды</th>
             </tr>
 
-            {% for el in feedbacks %}
+            {% for feed in feedbacks %}
             <tr>
-                <td>{{ el.id }}</td>
-                <td>{{ el.consult_name }}</td>
-                <td>{{ el.date_feed }}</td>
-                <td>{{ el.comment }}</td>
-                <td>{{ el.rating }}</td>
-                <td>{{ el.phone_number }}</td>
-                <td>{{ el.send }}</td>
+                <td>{{ feed.id }}</td>
+                <td>{{ feed.consult_name }}</td>
+                <td>{{ feed.date_feed }}</td>
+                <td>{{ feed.comment }}</td>
+                <td>{{ feed.rate }}</td>
+                <td>{{ feed.phone_number }}</td>
+                <td>{{ feed.send }}</td>
                 <td>
                     <form action="/admin_panel/delete/" method="post">
-                        <button type="submit" name="but-del" value="{{ el.id }}">Удалить</button>
+                        <button type="submit" name="but-del" value="{{ feed.id }}">Удалить</button>
                     </form>
                 </td>
             </tr>
