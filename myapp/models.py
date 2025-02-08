@@ -11,3 +11,11 @@ class Feedbacks(db.Model):
     rating: so.Mapped[int] = so.mapped_column()
     phone_number: so.Mapped[str] = so.mapped_column(sa.String(30))
     send: so.Mapped[bool] = so.mapped_column(sa.Boolean, default=False)
+
+#id, full_name, worker_post, rating, contacts
+class Workers(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    full_name: so.Mapped[str] = so.mapped_column(sa.String(128), index=True)
+    worker_post: so.Mapped[str] = so.mapped_column(sa.String(64))
+    rating: so.Mapped[float] = so.mapped_column(sa.Float())
+    contacts: so.Mapped[str] = so.mapped_column(sa.String(128))

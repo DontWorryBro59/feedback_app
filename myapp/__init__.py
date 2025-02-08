@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate, migrate
+from flask_migrate import Migrate
 
 CONSULTANTS = ['Виктор Петрухин', 'Дарья Аляпина', 'Татьяна Аляпко']
 #CONSULTANTS = []

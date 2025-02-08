@@ -2,7 +2,7 @@ from flask import render_template, request, session, redirect, url_for, flash
 from sqlalchemy.ext.horizontal_shard import set_shard_id
 
 from myapp import app, db, CONSULTANTS
-from myapp.models import Feedbacks
+from myapp.models import Feedbacks, Workers
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -20,7 +20,7 @@ def index():
         phone_number = request.form.get('phone')
         print(consult_name, date, comment, rating, phone_number)
         new_feed = Feedbacks(consult_name=consult_name, date_feed=date, comment=comment,
-                             rating=rating,phone_number=phone_number)
+                             rating=rating, phone_number=phone_number)
         db.session.add(new_feed)
         db.session.commit()
         session['number'] = phone_number
@@ -56,8 +56,9 @@ def admin():
 def admin_panel():
     if 'admin' in session:
         if request.method == 'GET':
-                feedbacks = db.session.query(Feedbacks).all()
-                return render_template('admin_panel.html', feedbacks=feedbacks)
+            feedbacks = db.session.query(Feedbacks).all()
+            workers = db.session.query(Workers).all()
+            return render_template('admin_panel.html', feedbacks=feedbacks, workers=workers)
     else:
         return redirect(url_for('admin'))
 
@@ -72,12 +73,12 @@ def del_comment():
     return redirect(url_for('admin_panel'))
 
 
-@app.route('/admin_panel/delete-worker/', method=['POST'])
+@app.route('/admin_panel/delete-worker/', methods=['POST'])
 def del_worker():
     pass
 
 
-@app.route('/admin_panel/add_worker/', method=['POST'])
+@app.route('/admin_panel/add_worker/', methods=['POST'])
 def add_worker():
     pass
 
@@ -89,4 +90,3 @@ def admin_logout():
         return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
-

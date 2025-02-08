@@ -5,37 +5,76 @@
 {% block content %}
 <div class="admin-panel">
     <h1> Панель администратора </h1>
-
-    <table>
-        <tr class="main-tr">
-            <th>id</th>
-            <th>Сотрудник</th>
-            <th>Дата отзыва</th>
-            <th>Отзыв</th>
-            <th>Оценка</th>
-            <th>Номер клиента</th>
-            <th>Отправлено(email)</th>
-            <th>Команды</th>
-        </tr>
-
-        {% for el in feedbacks %}
-        <tr>
-            <td>{{ el.id }}</td>
-            <td>{{ el.consult_name }}</td>
-            <td>{{ el.date_feed }}</td>
-            <td>{{ el.comment }}</td>
-            <td>{{ el.rating }}</td>
-            <td>{{ el.phone_number }}</td>
-            <td>{{ el.send }}</td>
-            <td>
-                <form action="/admin_panel/delete/" method="post">
-                    <button type="submit" name="but-del" value="{{ el.id }}">Удалить</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-
-    </table>
     <a href="{{ url_for('admin_logout') }}"><p>Выход из панели администратора</p></a>
+
+    <h2>Добавить сотрудника</h2>
+    <!-- Тут нужно добавить форму для добавления сотрудников -->
+
+    <h2>Список сотрудников </h2>
+    {% if workers %}
+        <table>
+            <tr class="main-tr">
+                <th>id</th>
+                <th>Сотрудник</th>
+                <th>Дата отзыва</th>
+                <th>Отзыв</th>
+                <th>Оценка</th>
+                <th>Номер клиента</th>
+                <th>Отправлено(email)</th>
+                <th>Команды</th>
+            </tr>
+            {% for worker in workers %}
+            <tr>
+                <td>{{ worker.id }}</td>
+                <td>{{ worker.full_name }}</td>
+                <td>{{ worker.worker_post }}</td>
+                <td>{{ worker.rating }}</td>
+                <td>{{ worker.contacts }}</td>
+                <td>
+                    <form action="/admin_panel/delete-worker/" method="post">
+                        <button type="submit" name="but-del-worker" value="{{ el.id }}">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+    {% else %}
+        <p> Сотрудников еще не добавили </p>
+    {% endif %}
+    </table>
+    <h2>Отзывы клиентов</h2>
+
+    {% if feedbacks %}
+        <table>
+            <tr class="main-tr">
+                <th>id</th>
+                <th>Сотрудник</th>
+                <th>Дата отзыва</th>
+                <th>Отзыв</th>
+                <th>Оценка</th>
+                <th>Номер клиента</th>
+                <th>Отправлено(email)</th>
+                <th>Команды</th>
+            </tr>
+
+            {% for el in feedbacks %}
+            <tr>
+                <td>{{ el.id }}</td>
+                <td>{{ el.consult_name }}</td>
+                <td>{{ el.date_feed }}</td>
+                <td>{{ el.comment }}</td>
+                <td>{{ el.rating }}</td>
+                <td>{{ el.phone_number }}</td>
+                <td>{{ el.send }}</td>
+                <td>
+                    <form action="/admin_panel/delete/" method="post">
+                        <button type="submit" name="but-del" value="{{ el.id }}">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p> Отзывов клиентов еще нет</p>
+    {% endif %}
 </div>
 {% endblock %}
