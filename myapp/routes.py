@@ -1,7 +1,7 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from datetime import date as dt
 
-from myapp import app, db, CONSULTANTS
+from myapp import app, db
 from myapp.models import Feedbacks, Workers
 
 
@@ -12,7 +12,7 @@ def index():
     if request.method == 'GET':
         if 'number' in session:
             return render_template('thanks.html')
-        return render_template('index.html', consultants=CONSULTANTS, date_today=date_today)
+        return render_template('index.html', consultants=app.config['CONSULTANTS'], date_today=date_today)
     else:
         consult_name = request.form.get('consult_name')
         date = request.form.get('date')
@@ -22,7 +22,7 @@ def index():
 
         if not check_date(date):
             flash('Вы ввели некорректную дату, год должен быть текущим, дата отзыва меньше или равна текущей', 'errors')
-            return render_template('index.html', consultants=CONSULTANTS, date_today=date_today)
+            return render_template('index.html', consultants=app.config['CONSULTANTS'], date_today=date_today)
 
         new_feed = Feedbacks(consult_name=consult_name, date_feed=date, comment=comment,
                              rate=rate, phone_number=phone_number)
@@ -43,7 +43,7 @@ def logout():
 @app.route('/admin_login/', methods=['GET', 'POST'])
 def admin():
     if request.method == 'GET':
-        if 'admin' in session:
+        if session['name'] == 'admin':
             return redirect(url_for('admin_panel'))
         return render_template('admin_login.html')
     else:
@@ -51,7 +51,7 @@ def admin():
         password = request.form.get('password')
 
         if username == 'admin' and password == '123pass456!':
-            session['admin'] = 'admin'
+            session['name'] = 'admin'
             return redirect(url_for('admin_panel'))
 
         else:
@@ -59,15 +59,18 @@ def admin():
             return render_template('admin_login.html')
 
 
-@app.route('/admin_panel/', methods=['GET', 'POST'])
+@app.route('/admin_panel/', methods=['GET'])
 def admin_panel():
-    if 'admin' in session:
-        if request.method == 'GET':
-            feedbacks = db.session.query(Feedbacks).all()
-            workers = db.session.query(Workers).all()
-            return render_template('admin_panel.html', feedbacks=feedbacks, workers=workers)
+    if 'name' in session:
+        if session['name'] == 'admin':
+            if request.method == 'GET':
+                feedbacks = db.session.query(Feedbacks).all()
+                workers = db.session.query(Workers).all()
+                return render_template('admin_panel.html', feedbacks=feedbacks, workers=workers, app=app)
     else:
-        return redirect(url_for('admin'))
+        session['name'] = None
+    return redirect(url_for('admin'))
+
 
 
 @app.route('/admin_panel/delete/', methods=['POST'])
@@ -87,7 +90,7 @@ def del_worker():
     if worker_to_del:
         db.session.delete(worker_to_del)
         db.session.commit()
-    CONSULTANTS.pop(CONSULTANTS.index(worker_to_del.full_name))
+    app.config['CONSULTANTS'].pop(app.config['CONSULTANTS'].index(worker_to_del.full_name))
     return redirect(url_for('admin_panel'))
 
 
@@ -99,14 +102,14 @@ def add_worker():
     new_worker = Workers(full_name=full_name, worker_post=worker_post, contacts=contacts)
     db.session.add(new_worker)
     db.session.commit()
-    CONSULTANTS.append(full_name)
+    app.config['CONSULTANTS'].append(full_name)
     return redirect(url_for('admin_panel'))
 
 
 @app.route('/admin_logout/')
 def admin_logout():
-    if 'admin' in session:
-        session.pop('admin', None)
+    if session['name'] == 'admin':
+        session['name'] == 'defoult'
         return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
@@ -114,7 +117,7 @@ def admin_logout():
 
 @app.route('/update_rating/', methods=['GET'])
 def update_rating():
-    if 'admin' in session:
+    if session['name'] == 'admin':
         all_workers = db.session.query(Workers).all()
         for worker in all_workers:
             all_worker_feeds = db.session.query(Feedbacks).filter(Feedbacks.consult_name == worker.full_name).all()
@@ -123,6 +126,16 @@ def update_rating():
             else:
                 worker.rating = 0
             db.session.commit()
+    return redirect(url_for('admin_panel'))
+
+
+@app.route('/change_send_set/', methods=['GET'])
+def change_send_set():
+    if session['name'] == 'admin':
+        if app.config['SEND_FLAG']:
+            app.config['SEND_FLAG'] = False
+        else:
+            app.config['SEND_FLAG'] = True
     return redirect(url_for('admin_panel'))
 
 

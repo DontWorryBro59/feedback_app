@@ -5,7 +5,16 @@
 {% block content %}
 <div class="admin-panel">
     <h1> Панель администратора </h1>
+    <h2> Настройки </h2>
+    <p> Отправка отзывов на почту:
+        {% if app.config['SEND_FLAG'] == True %}
+            <text style="color:green; font-size:20px; font-family: Arial"> Включено </text>
+        {% else %}
+            <text style="color:red; font-size:20px; font-family: Arial"> Выключено </text>
+        {% endif %}
+        <a href="{{ url_for('change_send_set') }}"><button> Включить/Выключить отправку </button></a>
 
+    </p>
     <h2> Кнопки управления </h2>
     <a href="{{ url_for('admin_logout') }}"><button>Выход из панели администратора</button></a>
     <a href="{{ url_for('update_rating') }}"><button> Обновить рейтинги </button></a>
