@@ -18,3 +18,16 @@ with app.app_context():
     consults = db.session.query(models.Workers).all()
     for el in consults:
         CONSULTANTS.append(el.full_name)
+
+
+class AdminConfig:
+
+    def __init__(self):
+        self.consultants = []
+        self.admin_login = 'admin'
+        self.admin_password = '123pass456!'
+        self.admin_login_def = 'admin'
+        self.admin_password_def = '123pass456!'
+        self.start_send = True
+
+admin_config = AdminConfig()

@@ -5,7 +5,10 @@
 {% block content %}
 <div class="admin-panel">
     <h1> Панель администратора </h1>
-    <a href="{{ url_for('admin_logout') }}"><p>Выход из панели администратора</p></a>
+
+    <h2> Кнопки управления </h2>
+    <a href="{{ url_for('admin_logout') }}"><button>Выход из панели администратора</button></a>
+    <a href="{{ url_for('update_rating') }}"><button> Обновить рейтинги </button></a>
 
     <h2>Добавить сотрудника</h2>
     <form action="/admin_panel/add_worker/" method="post">
@@ -23,6 +26,7 @@
                 <th>ФИО сотрудника</th>
                 <th>Должность</th>
                 <th>Контакты</th>
+                <th>Рейтинг</th>
                 <th>Команды</th>
             </tr>
             {% for worker in workers %}
@@ -31,6 +35,7 @@
                 <td>{{ worker.full_name }}</td>
                 <td>{{ worker.worker_post }}</td>
                 <td>{{ worker.contacts }}</td>
+                <td>{{ worker.rating }}</td>
                 <td>
                     <form action="/admin_panel/delete-worker/" method="post">
                         <button type="submit" name="but-del-worker" value="{{ worker.id }}">Удалить</button>

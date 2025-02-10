@@ -18,3 +18,4 @@ class Workers(db.Model):
     full_name: so.Mapped[str] = so.mapped_column(sa.String(128), index=True, unique=True)
     worker_post: so.Mapped[str] = so.mapped_column(sa.String(64))
     contacts: so.Mapped[str] = so.mapped_column(sa.String(128))
+    rating: so.Mapped[float] = so.mapped_column(nullable=False, default=0)

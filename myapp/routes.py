@@ -43,6 +43,8 @@ def logout():
 @app.route('/admin_login/', methods=['GET', 'POST'])
 def admin():
     if request.method == 'GET':
+        if 'admin' in session:
+            return redirect(url_for('admin_panel'))
         return render_template('admin_login.html')
     else:
         username = request.form.get('username')
@@ -110,11 +112,23 @@ def admin_logout():
         return redirect(url_for('index'))
 
 
+@app.route('/update_rating/', methods=['GET'])
+def update_rating():
+    if 'admin' in session:
+        all_workers = db.session.query(Workers).all()
+        for worker in all_workers:
+            all_worker_feeds = db.session.query(Feedbacks).filter(Feedbacks.consult_name == worker.full_name).all()
+            if len(all_worker_feeds) != 0:
+                worker.rating = sum([el.rate for el in all_worker_feeds]) / len(all_worker_feeds)
+            else:
+                worker.rating = 0
+            db.session.commit()
+    return redirect(url_for('admin_panel'))
+
+
 def check_date(date):
     date_today = list(map(int, str(dt.today()).split('-')))
     date = list(map(int, date.split('-')))
-    print(date_today)
-    print(date)
     if date_today[0] == date[0] and date_today[1] >= date[1] and date_today[2] >= date[2]:
         return True
     return False
