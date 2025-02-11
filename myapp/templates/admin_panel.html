@@ -5,6 +5,8 @@
 {% block content %}
 <div class="admin-panel">
     <h1> Панель администратора </h1>
+
+    <hr>
     <h2> Настройки </h2>
     <p> Отправка отзывов на почту:
         {% if app.config['SEND_FLAG'] == True %}
@@ -13,8 +15,9 @@
             <text style="color:red; font-size:20px; font-family: Arial"> Выключено </text>
         {% endif %}
         <a href="{{ url_for('change_send_set') }}"><button> Включить/Выключить отправку </button></a>
-
     </p>
+
+    <hr>
     <h2> Изменить пароль доступа к панели администратора </h2>
     <form action="/admin_panel/change_pass/" method="post">
         <input type="password" placeholder="Старый пароль" name="last_password">
@@ -22,11 +25,16 @@
         <input type="password" placeholder="Повторите новый пароль" name="new_password_repeat">
         <input type="submit" value="Изменить">
     </form>
+    <br><br>
+    <a href="{{ url_for('default_pass') }}"><button> Сбросить пароль до значения по умолчанию </button></a>
+    <br>
 
+    <hr>
     <h2> Кнопки управления </h2>
     <a href="{{ url_for('admin_logout') }}"><button>Выход из панели администратора</button></a>
     <a href="{{ url_for('update_rating') }}"><button> Обновить рейтинги </button></a>
 
+    <hr>
     <h2>Добавить сотрудника</h2>
     <form action="/admin_panel/add_worker/" method="post">
         <input type="text" placeholder="ФИО сотрудника" name="full_name">
@@ -35,6 +43,7 @@
         <input type="submit" value="Добавить">
     </form>
 
+    <hr>
     <h2>Список сотрудников </h2>
     {% if workers %}
         <table>
@@ -64,8 +73,9 @@
         <p> Сотрудников еще не добавили </p>
     {% endif %}
     </table>
-    <h2>Отзывы клиентов</h2>
 
+    <hr>
+    <h2>Отзывы клиентов</h2>
     {% if feedbacks %}
         <table>
             <tr class="main-tr">

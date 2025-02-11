@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./feedback.db'
 
 app.config['CONSULTANTS'] = []
 app.config['SEND_FLAG'] = False
-app.config['pass_adm_def'] = '123pass456!'
+app.config['pass_adm_def'] = 'admin'
 app.config['session_time'] = datetime.timedelta(seconds=300)
 app.config['session_permanent'] = True
 

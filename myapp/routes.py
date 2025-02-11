@@ -23,7 +23,12 @@ def index():
 
         if not check_date(date):
             flash('Вы ввели некорректную дату, год должен быть текущим, дата отзыва меньше или равна текущей', 'errors')
-            return render_template('index.html', consultants=app.config['CONSULTANTS'], date_today=date_today)
+            return redirect(url_for('index'))
+
+        phone_number = check_number(phone_number)
+        if not phone_number:
+            flash('Вы ввели некорректный номер телефона, введите номер телефона соответствующего формата', 'errors')
+            return redirect(url_for('index'))
 
         new_feed = Feedbacks(consult_name=consult_name, date_feed=date, comment=comment,
                              rate=rate, phone_number=phone_number)
@@ -74,7 +79,7 @@ def admin_panel():
 
 @app.route('/admin_logout/')
 def admin_logout():
-    if 'name' in session:
+    if 'name' in session and session['name'] == 'admin':
         session.clear()
         session['name'] = 'defoult'
         return redirect(url_for('index'))
@@ -134,9 +139,9 @@ def change_pass():
     return redirect(url_for('admin_panel'))
 
 
-@app.route('/update_rating/', methods=['GET'])
+@app.route('/admin_panel/update_rating/', methods=['GET'])
 def update_rating():
-    if session['name'] == 'admin':
+    if 'name' in session and session['name'] == 'admin':
         all_workers = db.session.query(Workers).all()
         for worker in all_workers:
             all_worker_feeds = db.session.query(Feedbacks).filter(Feedbacks.consult_name == worker.full_name).all()
@@ -148,9 +153,9 @@ def update_rating():
     return redirect(url_for('admin_panel'))
 
 
-@app.route('/change_send_set/', methods=['GET'])
+@app.route('/admin_panel/change_send_set/', methods=['GET'])
 def change_send_set():
-    if session['name'] == 'admin':
+    if 'name' in session and session['name'] == 'admin':
         if app.config['SEND_FLAG']:
             app.config['SEND_FLAG'] = False
         else:
@@ -158,7 +163,22 @@ def change_send_set():
     return redirect(url_for('admin_panel'))
 
 
-def check_date(date):
+@app.route('/admin_panel/default_pass/', methods=['GET'])
+def default_pass():
+    if 'name' in session and session['name'] == 'admin':
+        admin = db.session.query(Admins).filter(Admins.username == 'admin').first()
+        admin.set_password(app.config['pass_adm_def'])
+        db.session.commit()
+        flash('Пароль сброшен до стартового значения', 'success')
+    return redirect(url_for('admin_panel'))
+
+
+def check_date(date: str) -> bool:
+    """
+    This function is check the date
+    :param date: str
+    :return: bool
+    """
     date_today = list(map(int, str(dt.today()).split('-')))
     date = list(map(int, date.split('-')))
     if date_today[0] == date[0] and date_today[1] >= date[1] and date_today[2] >= date[2]:
@@ -166,3 +186,20 @@ def check_date(date):
     return False
 
 
+def check_number(number: str) -> bool | str:
+    """
+    This function is validate phone number
+    :param number: str
+    :return: bool | str
+    """
+    new_number = ''
+    for el in number:
+        if el.isdigit():
+            new_number += el
+    if len(new_number) == 11 and new_number[0] in ['8', '7']:
+        new_number = '+7' + new_number[1:]
+        return new_number
+    elif len(new_number) == 10 and new_number[0] == '9':
+        new_number = '+7' + new_number
+        return new_number
+    return False
