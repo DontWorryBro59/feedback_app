@@ -13,16 +13,22 @@
     </div>
 
     <div class="container">
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(category_filter=["errors"]) %}
         {% if messages %}
             {% for message in messages %}
-                <p class='p-flash'>{{ message }}</p>
+                <p class='e-flash'>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% with messages = get_flashed_messages(category_filter=["success"]) %}
+        {% if messages %}
+            {% for message in messages %}
+                <p class='s-flash'>{{ message }}</p>
             {% endfor %}
         {% endif %}
     {% endwith %}
     </div>
-
-
     {% block content %}
     {% endblock %}
 

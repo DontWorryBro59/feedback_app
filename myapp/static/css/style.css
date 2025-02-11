@@ -10,11 +10,18 @@
     font-family: "Arial Black";
 }
 
-.container .p-flash{
+.container .e-flash{
     color: red;
     text-align: center;
     font-family: "Arial Black";
 }
+
+.container .s-flash{
+    color: green;
+    text-align: center;
+    font-family: "Arial Black";
+}
+
 .container .my-form input {
     margin-bottom: 25px;
 }

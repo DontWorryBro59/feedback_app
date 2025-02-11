@@ -15,6 +15,14 @@
         <a href="{{ url_for('change_send_set') }}"><button> Включить/Выключить отправку </button></a>
 
     </p>
+    <h2> Изменить пароль доступа к панели администратора </h2>
+    <form action="/admin_panel/change_pass/" method="post">
+        <input type="password" placeholder="Старый пароль" name="last_password">
+        <input type="password" placeholder="Новый пароль" name="new_password">
+        <input type="password" placeholder="Повторите новый пароль" name="new_password_repeat">
+        <input type="submit" value="Изменить">
+    </form>
+
     <h2> Кнопки управления </h2>
     <a href="{{ url_for('admin_logout') }}"><button>Выход из панели администратора</button></a>
     <a href="{{ url_for('update_rating') }}"><button> Обновить рейтинги </button></a>

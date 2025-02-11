@@ -1,6 +1,9 @@
 import sqlalchemy as sa
 import sqlalchemy.orm as so
+
 from myapp import db
+
+
 
 #consult_name, date, comment, rating, phone_number
 class Feedbacks(db.Model):
@@ -19,3 +22,5 @@ class Workers(db.Model):
     worker_post: so.Mapped[str] = so.mapped_column(sa.String(64))
     contacts: so.Mapped[str] = so.mapped_column(sa.String(128))
     rating: so.Mapped[float] = so.mapped_column(nullable=False, default=0)
+
+
