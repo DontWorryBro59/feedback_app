@@ -1,5 +1,5 @@
-from flask import render_template, request, session, redirect, url_for, flash
 from datetime import date as dt
+from flask import render_template, request, session, redirect, url_for, flash
 
 from myapp import app, db
 from myapp.models import Feedbacks, Workers, Admins
@@ -150,16 +150,6 @@ def update_rating():
             else:
                 worker.rating = 0
             db.session.commit()
-    return redirect(url_for('admin_panel'))
-
-
-@app.route('/admin_panel/change_send_set/', methods=['GET'])
-def change_send_set():
-    if 'name' in session and session['name'] == 'admin':
-        if app.config['SEND_FLAG']:
-            app.config['SEND_FLAG'] = False
-        else:
-            app.config['SEND_FLAG'] = True
     return redirect(url_for('admin_panel'))
 
 

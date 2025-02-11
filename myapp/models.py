@@ -1,8 +1,9 @@
+from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from werkzeug.security import generate_password_hash, check_password_hash
 from myapp import db
-from typing import Optional
+
 
 
 # consult_name, date, comment, rating, phone_number
