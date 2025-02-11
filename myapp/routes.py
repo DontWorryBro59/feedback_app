@@ -2,7 +2,7 @@ from flask import render_template, request, session, redirect, url_for, flash
 from datetime import date as dt
 
 from myapp import app, db
-from myapp.models import Feedbacks, Workers
+from myapp.models import Feedbacks, Workers, Admins
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -46,15 +46,16 @@ def admin_login():
             username = request.form.get('username')
             password = request.form.get('password')
 
-            if username == app.config['login_adm'] and password == app.config['pass_adm']:
-                session['name'] = 'admin'
-                session.permanent = app.config['session_permanent']
-                app.permanent_session_lifetime = app.config['session_time']
-                return redirect(url_for('admin_panel'))
-
-            else:
-                flash('Ошибка ввода логина и пароля', 'errors')
-                return render_template('admin_login.html')
+            admin_list = db.session.query(Admins).all()
+            for el in admin_list:
+                if el.username == username:
+                    if el.check_password(password):
+                        session['name'] = 'admin'
+                        session.permanent = app.config['session_permanent']
+                        app.permanent_session_lifetime = app.config['session_time']
+                        return redirect(url_for('admin_panel'))
+            flash('Ошибка ввода логина и пароля', 'errors')
+            return render_template('admin_login.html')
     else:
         session['name'] = 'defoult'
         return render_template('admin_login.html')
@@ -120,9 +121,11 @@ def change_pass():
         lst_psw = request.form.get('last_password')
         new_psw = request.form.get('new_password')
         new_psw_rpt = request.form.get('new_password_repeat')
-        if lst_psw == app.config['pass_adm']:
+        admin = db.session.query(Admins).filter(Admins.username == 'admin').first()
+        if admin.check_password(lst_psw):
             if new_psw == new_psw_rpt:
-                app.config['pass_adm'] = new_psw
+                admin.set_password(new_psw)
+                db.session.commit()
                 flash('Пароль изменен', 'success')
             else:
                 flash('Пароли не совпадают', 'errors')
@@ -163,8 +166,3 @@ def check_date(date):
     return False
 
 
-def check_number(number):
-    red_number = []
-    for el in number:
-        if el.isdigit():
-            pass
