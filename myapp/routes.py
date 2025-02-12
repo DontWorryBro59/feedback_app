@@ -108,6 +108,7 @@ def del_worker():
     return redirect(url_for('admin_panel'))
 
 
+
 @app.route('/admin_panel/add_worker/', methods=['POST'])
 def add_worker():
     full_name = request.form.get('full_name')
